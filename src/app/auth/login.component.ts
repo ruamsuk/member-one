@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
 import { Router, RouterLink } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -21,10 +21,10 @@ import { Auth } from '@angular/fire/auth';
         <form [formGroup]="loginForm" (ngSubmit)="login()">
           <p-card [style]="{width:'360px'}">
             <div class="flex justify-center">
-              <img src="/images/primeng-logo.png" alt="logo">
+              <img src="/images/primeng.png" alt="logo">
             </div>
             <div class="flex justify-center text-900 text-2xl font-medium my-5">
-              Ruamsuk Acc.
+              Inquiry 25.
             </div>
             <ng-template pTemplate="p-card-content">
               <div class="field my-2">
@@ -70,7 +70,7 @@ import { Auth } from '@angular/fire/auth';
                     {{ messages }}
                   </small>
                 }
-                <div class="my-5">
+                <div class="my-2">
                   <span
                     class="sarabun text-sky-400 italic cursor-pointer hover:text-sky-300"
                     (click)="forgotPassword()"
@@ -82,7 +82,7 @@ import { Auth } from '@angular/fire/auth';
             </ng-template>
             <ng-template pTemplate="footer">
               <div class="flex items-start justify-center">
-                @if (loading) {
+                @if (loading()) {
                   <button type="button"
                           class="w-full inline-flex justify-center items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-indigo-500 hover:bg-indigo-400 transition ease-in-out duration-150 cursor-not-allowed"
                   >
@@ -101,6 +101,19 @@ import { Auth } from '@angular/fire/auth';
                     Login
                   </button>
                 }
+              </div>
+              <div class="relative flex items-center py-1">
+                <div class="flex-grow h-px bg-gray-400"></div>
+                <span class="flex-shrink px-4 text-gray-500">OR</span>
+                <div class="flex-grow h-px bg-gray-400"></div>
+              </div>
+              <div class="grid grid-cols-1">
+                <p-button
+                  label="SignIn With Google"
+                  icon="pi pi-google"
+                  [loading]="loading()"
+                  severity="secondary"
+                  styleClass="w-full" (click)="googleSignIn()"/>
               </div>
               <div class="mt-2 mg-5 ml-2">
                 Not a member?
@@ -124,7 +137,7 @@ export class LoginComponent {
   message = inject(MessageService);
   router = inject(Router);
   ref: DynamicDialogRef | undefined;
-  loading: boolean = false;
+  loading = signal(false);
   private firebaseAuth: Auth = inject(Auth);
   private firestore: Firestore = inject(Firestore);
   private formBuilder = inject(FormBuilder);
@@ -171,7 +184,7 @@ export class LoginComponent {
       return;
     }
 
-    this.loading = true;
+    this.loading.set(true);
 
     this.authService.login(email, password).subscribe({
       next: async (userCredential) => {
@@ -206,7 +219,7 @@ export class LoginComponent {
 
   setTimer() {
     setTimeout(() => {
-      this.loading = false;
+      this.loading.set(false);
     }, 100);
   }
 
@@ -224,8 +237,16 @@ export class LoginComponent {
     });
   }
 
-  addMessage() {
-    this.message.add({ severity: 'info', summary: 'Info', detail: 'Feature coming soon' });
+  // facebookSignIn() {
+  //   this.authService.facebookSignIn().then(
+  //     () => this.router.navigateByUrl('/home')
+  //   );
+  // }
+
+  googleSignIn() {
+    this.authService.googleSignIn().then(
+      () => this.router.navigateByUrl('/home')
+    );
   }
 
   private getUserProfile() {

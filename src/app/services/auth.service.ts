@@ -16,7 +16,7 @@ import {
   UserInfo,
   IdTokenResult,
 } from '@angular/fire/auth';
-import { GoogleAuthProvider } from '@firebase/auth';
+import { GoogleAuthProvider, FacebookAuthProvider } from '@firebase/auth';
 import { concatMap, from, Observable, of } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
@@ -102,6 +102,13 @@ export class AuthService {
 
   async googleSignIn(): Promise<void> {
     const provider = new GoogleAuthProvider();
+    const { user } = await this.ngZone.run(() => signInWithPopup(this.firebaseAuth, provider));
+    await this.saveUserToFirestore(user, '');
+    await this.saveToLocal(user);
+  }
+
+  async facebookSignIn(): Promise<void> {
+    const provider = new FacebookAuthProvider();
     const { user } = await this.ngZone.run(() => signInWithPopup(this.firebaseAuth, provider));
     await this.saveUserToFirestore(user, '');
     await this.saveToLocal(user);

@@ -3,7 +3,6 @@ import { UsersService } from '../services/users.service';
 import { ConfirmationService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ToastService } from '../services/toast.service';
-import { FormControl } from '@angular/forms';
 import { User } from '../models/user.model';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, Observable, tap, throwError } from 'rxjs';
@@ -14,7 +13,7 @@ import { TableModule } from 'primeng/table';
   selector: 'app-users-list',
   imports: [
     ProgressSpinner,
-    TableModule
+    TableModule,
   ],
   template: `
     @if (loading()) {
@@ -48,7 +47,7 @@ import { TableModule } from 'primeng/table';
               <th>Role</th>
             </tr>
           </ng-template>
-          <ng-template #body let-user>
+          <ng-template #body let-user let-i="rowIndex">
             <tr [pSelectableRow]="user">
               @if (user.role != 'admin' && user.role != 'manager') {
                 <td>{{ user.email }}</td>
@@ -66,18 +65,12 @@ import { TableModule } from 'primeng/table';
 })
 export class UsersListComponent implements OnDestroy {
   private userService: UsersService = inject(UsersService);
-  private confirmService: ConfirmationService = inject(ConfirmationService);
-  private dialogService: DialogService = inject(DialogService);
   private toastService = inject(ToastService);
 
   ref: DynamicDialogRef | undefined;
   selectedUser!: User;
-  currentPage = 0;
-  rowsPerPage = 10;
   users!: User[];
   user!: User;
-
-  searchValue = new FormControl('');
   loading = signal<boolean>(true);
 
   getUsers = toSignal(

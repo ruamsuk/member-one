@@ -137,11 +137,8 @@ import { NgClass } from '@angular/common';
 })
 export class SignUpComponent {
   private authService: AuthService = inject(AuthService);
-  private fireAuth: Auth = inject(Auth);
-  private dialogService: DialogService = inject(DialogService);
   private toastService: ToastService = inject(ToastService);
   private router: Router = inject(Router);
-  private firestore: Firestore = inject(Firestore);
   private formBuilder: FormBuilder = inject(FormBuilder);
 
   /** Variable */
@@ -203,10 +200,6 @@ export class SignUpComponent {
         this.loading.set(false);
         this.toastService.showError('Error', error.message);
       });
-  }
-
-  signUpWithGoogle() {
-    console.log(JSON.stringify(this.signUpForm.value, null, 2));
   }
 
   onSignIn() {

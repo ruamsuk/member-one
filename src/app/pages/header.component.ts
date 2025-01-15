@@ -5,7 +5,7 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { SharedModule } from '../shared/shared.module';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { UserProfileComponent } from '../components/user-profile/user-profile.component';
-import { interval, take } from 'rxjs';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -16,7 +16,7 @@ import { interval, take } from 'rxjs';
       <div class="card">
         <p-menubar [model]="items">
           <ng-template pTemplate="start">
-            <img src="/images/primeng-logo.png" alt="logo"/>
+            <img src="/images/primeng.png" alt="logo"/>
           </ng-template>
           <ng-template pTemplate="item" let-item>
             <ng-container>
@@ -82,18 +82,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userPhoto: string = '';
   currentUser = this.auth.currentUser;
 
-  ngOnInit(): void {
-    this.checkRole();
+  async ngOnInit() {
+    this.getRole().then(
+      () => this.setItems()
+    );
     this.userPhoto = this.currentUser()?.photoURL || '/images/dummy-user.png';
   }
 
-  checkRole() {
-    this.auth.userProfile$.pipe(take(1)).subscribe((user: any) => {
-      this.isAdmin = user.role === 'admin' || user.role === 'manager';
-    });
-    setTimeout(() => {
-      this.setItems();
-    }, 100);
+  async getRole() {
+    this.isAdmin = await this.auth.isAuth();
   }
 
   setItems() {
@@ -110,7 +107,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       },
       {
         label: 'Users',
-        icon: 'pi pi-users',
+        icon: 'pi pi-user-plus',
         command: () => this.router.navigateByUrl('/user'),
         visible: this.isAdmin
       },
