@@ -6,22 +6,18 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AuthService } from '../services/auth.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ForgotPasswordComponent } from './forgot-password.component';
-import { NgClass } from '@angular/common';
-import { User } from '../models/user.model';
-import { Observable, of } from 'rxjs';
-import { doc, docData, Firestore } from '@angular/fire/firestore';
-import { Auth } from '@angular/fire/auth';
+import { NgClass, NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-login',
-  imports: [SharedModule, RouterLink, NgClass],
+  imports: [SharedModule, RouterLink, NgClass, NgOptimizedImage],
   template: `
     <div class="flex justify-center items-center h-screen gap-y-5">
       <div>
         <form [formGroup]="loginForm" (ngSubmit)="login()">
           <p-card [style]="{width:'360px'}">
             <div class="flex justify-center">
-              <img src="/images/primeng.png" alt="logo">
+              <img ngSrc="/images/primeng.png" alt="logo" height="51" width="48">
             </div>
             <div class="flex justify-center text-900 text-2xl font-medium my-5">
               Inquiry 25.
@@ -138,8 +134,6 @@ export class LoginComponent {
   router = inject(Router);
   ref: DynamicDialogRef | undefined;
   loading = signal(false);
-  private firebaseAuth: Auth = inject(Auth);
-  private firestore: Firestore = inject(Firestore);
   private formBuilder = inject(FormBuilder);
   loginForm = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
@@ -249,13 +243,13 @@ export class LoginComponent {
     );
   }
 
-  private getUserProfile() {
-    const user = this.firebaseAuth.currentUser;
-    const ref = doc(this.firestore, 'users', `${ user?.uid }`);
-    if (ref) {
-      return docData(ref) as Observable<User | null>;
-    } else {
-      return of(null);
-    }
-  }
+  // private getUserProfile() {
+  //   const user = this.firebaseAuth.currentUser;
+  //   const ref = doc(this.firestore, 'users', `${ user?.uid }`);
+  //   if (ref) {
+  //     return docData(ref) as Observable<User | null>;
+  //   } else {
+  //     return of(null);
+  //   }
+  // }
 }
