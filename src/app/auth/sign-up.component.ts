@@ -1,24 +1,21 @@
 import { Component, inject, signal } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
 import { AuthService } from '../services/auth.service';
-import { DialogService } from 'primeng/dynamicdialog';
 import { ToastService } from '../services/toast.service';
 import { Router } from '@angular/router';
-import { Auth } from '@angular/fire/auth';
-import { Firestore } from '@angular/fire/firestore';
 import { FormBuilder, Validators } from '@angular/forms';
-import { NgClass } from '@angular/common';
+import { NgClass, NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-sign-up',
-  imports: [SharedModule, NgClass],
+  imports: [SharedModule, NgClass, NgOptimizedImage],
   template: `
     <div class="center h-screen gap-y-5">
       <div>
         <form [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
           <p-card [style]="{width: '360px'}">
             <div class="flex justify-center">
-              <img src="/images/primeng-logo.png" alt="logo">
+              <img ngSrc="/images/primeng-logo.png" alt="logo" height="43" width="40">
             </div>
             <div class="center text-900 text-2xl font-medium my-3">
               Create Account

@@ -1,7 +1,6 @@
 import { Component, inject, OnDestroy, signal } from '@angular/core';
 import { UsersService } from '../services/users.service';
-import { ConfirmationService } from 'primeng/api';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ToastService } from '../services/toast.service';
 import { User } from '../models/user.model';
 import { toSignal } from '@angular/core/rxjs-interop';
