@@ -200,7 +200,7 @@ export class SignUpComponent {
   }
 
   onSignIn() {
-    this.router.navigateByUrl('/auth/login');
+    this.router.navigateByUrl('/auth/login').then();
   }
 
   googleSignIn() {

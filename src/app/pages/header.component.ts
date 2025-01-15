@@ -5,18 +5,18 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { SharedModule } from '../shared/shared.module';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { UserProfileComponent } from '../components/user-profile/user-profile.component';
-import { take } from 'rxjs';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-header',
-  imports: [SharedModule, RouterLink],
+  imports: [SharedModule, RouterLink, NgOptimizedImage],
   template: `
     @if (currentUser()) {
 
       <div class="card">
         <p-menubar [model]="items">
           <ng-template pTemplate="start">
-            <img src="/images/primeng.png" alt="logo"/>
+            <img ngSrc="/images/primeng.png" alt="logo" height="51" width="48"/>
           </ng-template>
           <ng-template pTemplate="item" let-item>
             <ng-container>

@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
 import { GalleriaModule } from 'primeng/galleria';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [SharedModule, GalleriaModule],
+  imports: [SharedModule, GalleriaModule, NgOptimizedImage],
   template: `
     <div
       class="center text-slate-300 my-3"
@@ -24,10 +25,10 @@ import { GalleriaModule } from 'primeng/galleria';
       >
         <ng-template pTemplate="item" let-item>
           <img
-            [src]="item.source"
+            ngSrc="{{item.source}}"
             style="width: 100%; max-width: 100%; height: auto;"
             alt="item.alt"
-          />
+            fill/>
         </ng-template>
         <ng-template pTemplate="caption" let-item>
           <div class="p-galleria-caption">
@@ -71,16 +72,16 @@ import { GalleriaModule } from 'primeng/galleria';
     }
 
     /* gallery.component.css  Not work! */
-    :host ::ng-deep .p-galleria .p-galleria-item {
+    .p-galleria .p-galleria-item {
       transition: opacity 0.5s ease-in-out;
       opacity: 1;
     }
 
-    :host ::ng-deep .p-galleria .p-galleria-item.ng-star-inserted {
+    .p-galleria .p-galleria-item.ng-star-inserted {
       opacity: 0;
     }
 
-    :host ::ng-deep .p-galleria .p-galleria-item.p-galleria-item-active {
+    .p-galleria .p-galleria-item.p-galleria-item-active {
       opacity: 1;
     }
 
