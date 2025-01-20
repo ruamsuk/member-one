@@ -5,13 +5,21 @@ import { ToastService } from '../services/toast.service';
 import { Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NgClass, NgOptimizedImage } from '@angular/common';
+import { Message } from 'primeng/message';
 
 @Component({
   selector: 'app-sign-up',
-  imports: [SharedModule, NgClass, NgOptimizedImage],
+  imports: [SharedModule, NgClass, NgOptimizedImage, Message],
   template: `
     <div class="center h-screen gap-y-5">
       <div>
+        @if (showMessage()) {
+          <div class="center py-3 w-full">
+            <p-message [life]="3000" severity="success">
+              {{ showMessage() }}
+            </p-message>
+          </div>
+        }
         <form [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
           <p-card [style]="{width: '360px'}">
             <div class="flex justify-center">
@@ -183,7 +191,7 @@ export class SignUpComponent {
 
   onSignUp() {
     if (this.signUpForm.invalid) return;
-    const { displayName, email, password } = this.signUpForm.value;
+    const {displayName, email, password} = this.signUpForm.value;
 
     this.loading.set(true);
 

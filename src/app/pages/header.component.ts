@@ -16,7 +16,7 @@ import { NgOptimizedImage } from '@angular/common';
       <div class="card">
         <p-menubar [model]="items">
           <ng-template pTemplate="start">
-            <img ngSrc="/images/primeng.png" alt="logo" height="51" width="48"/>
+            <img ngSrc="/images/primeng.png" priority alt="logo" height="51" width="48"/>
           </ng-template>
           <ng-template pTemplate="item" let-item>
             <ng-container>
@@ -82,7 +82,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userPhoto: string = '';
   currentUser = this.auth.currentUser;
 
-  async ngOnInit() {
+  ngOnInit() {
     this.getRole().then(
       () => this.setItems()
     );
@@ -147,7 +147,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       header: 'User Details',
       width: '500px',
       modal: true,
-      contentStyle: { overflow: 'auto' },
+      contentStyle: {overflow: 'auto'},
       breakpoints: {
         '960px': '500px',
         '640px': '360px',

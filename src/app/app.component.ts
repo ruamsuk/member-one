@@ -1,4 +1,4 @@
-import { Component, DestroyRef, HostListener, inject } from '@angular/core';
+import { Component, DestroyRef, HostListener, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { PrimeNG } from 'primeng/config';
@@ -8,17 +8,18 @@ import { AuthService } from './services/auth.service';
 import { SharedModule } from './shared/shared.module';
 import { HeaderComponent } from './pages/header.component';
 import { FooterComponent } from './pages/footer.component';
+import { Auth, getAuth, onAuthStateChanged, user } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, SharedModule, HeaderComponent, FooterComponent],
   template: `
     <p-toast/>
-    @if (currentUser()) {
+    @if (currentUser() && emailVerify()) {
       <app-header/>
     }
     <router-outlet/>
-    @if (currentUser()) {
+    @if (currentUser() && emailVerify()) {
       <app-footer/>
     }
   `,
@@ -41,15 +42,22 @@ import { FooterComponent } from './pages/footer.component';
     `,
   ],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   private auth: AuthService = inject(AuthService);
   private destroyRef = inject(DestroyRef);
   private primeng: PrimeNG = inject(PrimeNG);
   private translate: TranslateService = inject(TranslateService);
+  private isAuth: Auth = inject(Auth);
+  emailVerify = signal(false);
 
   currentUser = this.auth.currentUser;
 
-  constructor() {
+  ngOnInit() {
+    // const auth = getAuth();
+
+    onAuthStateChanged(this.isAuth, (user) => {
+      this.emailVerify.set(user?.emailVerified || false);
+    });
     /** Prime */
     this.primeng.zIndex = {
       modal: 1100,    // dialog, sidebar

@@ -1,55 +1,92 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
 import { GalleriaModule } from 'primeng/galleria';
-import { NgOptimizedImage } from '@angular/common';
+import { AuthService } from '../services/auth.service';
+import { Panel } from 'primeng/panel';
+import { getAuth } from '@angular/fire/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [SharedModule, GalleriaModule, NgOptimizedImage],
+  imports: [SharedModule, GalleriaModule, Panel],
   template: `
-    <div
-      class="center text-slate-300 my-3"
-    >
-      <p class="hidden md:block text-base md:text-xl text-amber-400">Welcome to.</p>
-    </div>
-    <div class="center">
-      <p-galleria
-        [value]="images"
-        [autoPlay]="true"
-        [responsiveOptions]="responsiveOptions"
-        [numVisible]="5"
-        [circular]="true"
-        [showThumbnails]="false"
-        [containerStyle]="{ 'max-width': '1100px' }"
+    @if (!emailVerify) {
+      <div class="center items-center h-[300px]">
+        <p-panel>
+          <ng-template #header>
+            <div class="flex items-center gap-2">
+              <i class="pi pi-info-circle text-xl text-red-500"></i>
+              <span class="text-xl text-red-500 font-bold">Verify your email first!</span>
+            </div>
+          </ng-template>
+          <ng-template #icons>
+            <div class="flex flex-wrap items-center justify-end">
+              <p-button
+                icon="pi pi-times"
+                size="small"
+                severity="secondary"
+                label="Close" (click)="goLogin()"></p-button>
+            </div>
+          </ng-template>
+          <p class="text-base  md:text-center md:text-xl text-amber-300">
+            ยังไม่ได้ยืนยันอีเมล์ของคุณ โปรดยืนยันอีเมล์ที่ลงทะเบียนไว้ในระบบ เราได้ส่งลิงก์ยืนยันให้แล้ว
+          </p>
+          <hr class="my-1 border">
+          <p class="md:text-justify text-orange-300 text-base md:text-xl">
+            You haven't verified your email yet. Please verify the email registered in the system. We have sent a
+            verification link to you.
+          </p>
+
+        </p-panel>
+      </div>
+
+    } @else if (emailVerify) {
+      <div
+        class="center text-slate-300 my-3"
       >
-        <ng-template pTemplate="item" let-item>
-          <img
-            ngSrc="{{item.source}}"
-            style="width: 100%; max-width: 100%; height: auto;"
-            alt="item.alt"
-            fill/>
-        </ng-template>
-        <ng-template pTemplate="caption" let-item>
-          <div class="p-galleria-caption">
-            <h4 class="text-center">
+        <p class="hidden md:block text-base md:text-xl text-amber-400">Welcome to.</p>
+      </div>
+
+
+      <div class="center">
+        <p-galleria
+          [value]="images"
+          [autoPlay]="true"
+          [responsiveOptions]="responsiveOptions"
+          [numVisible]="5"
+          [circular]="true"
+          [showThumbnails]="false"
+          [containerStyle]="{ 'max-width': '1100px' }"
+        >
+          <ng-template pTemplate="item" let-item>
+            <img
+              [src]="item.source"
+              style="width: 100%; max-width: 100%; height: auto;"
+              alt="item.alt"
+            />
+          </ng-template>
+          <ng-template pTemplate="caption" let-item>
+            <div class="p-galleria-caption">
+              <h4 class="text-center">
               <span
                 class="charmonman-regular text-xl md:text-4xl text-cyan-300"
               >{{ item.title }}</span
               >
-            </h4>
-          </div>
-        </ng-template>
-      </p-galleria>
-    </div>
-    <div class="center my-3">
-      <p class="hidden md:block text-base md:text-xl text-amber-400">25th Batch of Student Investigators' Training
-        Club
-      </p>
-    </div>
-    <div class="px-8 -mt-3">
-      <hr/>
-    </div>
+              </h4>
+            </div>
+          </ng-template>
+        </p-galleria>
+      </div>
+      <div class="center my-3">
+        <p class="hidden md:block text-base md:text-xl text-amber-400">25th Batch of Student Investigators' Training
+          Club
+        </p>
+      </div>
+      <div class="px-8 -mt-3">
+        <hr/>
+      </div>
+    }
   `,
   styles: `
     .p-galleria {
@@ -93,6 +130,16 @@ import { NgOptimizedImage } from '@angular/common';
   `,
 })
 export class HomeComponent {
+  auth: AuthService = inject(AuthService);
+  emailVerify: boolean | undefined = true;
+  router = inject(Router);
+
+  constructor() {
+    const auth = getAuth();
+    this.emailVerify = auth.currentUser?.emailVerified;
+  }
+
+
   images: any[] = [
     {
       source: 'photos/01.jpg',
@@ -161,4 +208,8 @@ export class HomeComponent {
       numVisible: 1,
     },
   ];
+
+  goLogin() {
+    this.auth.logout().then(() => this.router.navigateByUrl('/auth/login'));
+  }
 }

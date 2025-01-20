@@ -1,16 +1,18 @@
 import { Component, inject, signal } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
 import { Router, RouterLink } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AuthService } from '../services/auth.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ForgotPasswordComponent } from './forgot-password.component';
 import { NgClass, NgOptimizedImage } from '@angular/common';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+
 
 @Component({
   selector: 'app-login',
-  imports: [SharedModule, RouterLink, NgClass, NgOptimizedImage],
+  imports: [SharedModule, RouterLink, NgClass, NgOptimizedImage, ConfirmDialogModule],
   template: `
     <div class="flex justify-center items-center h-screen gap-y-5">
       <div>
@@ -130,6 +132,7 @@ import { NgClass, NgOptimizedImage } from '@angular/common';
 export class LoginComponent {
   authService = inject(AuthService);
   dialogService = inject(DialogService);
+  confirmService = inject(ConfirmationService);
   message = inject(MessageService);
   router = inject(Router);
   ref: DynamicDialogRef | undefined;
@@ -172,7 +175,7 @@ export class LoginComponent {
   }
 
   login() {
-    const { email, password } = this.loginForm.value;
+    const {email, password} = this.loginForm.value;
 
     if (!this.loginForm.valid || !email || !password) {
       return;
@@ -183,6 +186,18 @@ export class LoginComponent {
     this.authService.login(email, password).subscribe({
       next: async (userCredential) => {
         const user = userCredential.user;
+
+        if (!user.emailVerified) {
+          this.message.add({
+            severity: 'warn',
+            summary: 'Warning',
+            detail: 'Please verify your email before logging in',
+            life: 5000
+          });
+          this.loading.set(false);
+          await this.router.navigateByUrl('/auth/login');
+          return;
+        }
         const role = this.authService.getRoles();
 
         const userProfile = await this.authService.getUserProfile(user.uid);
@@ -195,14 +210,14 @@ export class LoginComponent {
             ...userProfile,
           };
           localStorage.setItem('user', JSON.stringify(userData));
-          this.message.add({ severity: 'success', summary: 'Success', detail: 'Login successful' });
+          this.message.add({severity: 'success', summary: 'Success', detail: 'Login successful'});
         } else {
-          this.message.add({ severity: 'error', summary: 'Error', detail: 'User not found.' });
+          this.message.add({severity: 'error', summary: 'Error', detail: 'User not found.'});
         }
       },
       error: (error) => {
         this.setTimer();
-        this.message.add({ severity: 'error', summary: 'Error', detail: error.message });
+        this.message.add({severity: 'error', summary: 'Error', detail: error.message});
       },
       complete: () => {
         this.setTimer();
@@ -222,7 +237,7 @@ export class LoginComponent {
       header: 'Forgot Password',
       width: '360px',
       modal: true,
-      contentStyle: { overflow: 'auto' },
+      contentStyle: {overflow: 'auto'},
       breakpoints: {
         '960px': '360px',
         '640px': '360px',
@@ -252,4 +267,5 @@ export class LoginComponent {
   //     return of(null);
   //   }
   // }
+
 }

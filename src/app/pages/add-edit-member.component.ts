@@ -14,134 +14,134 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
 @Component({
   selector: 'app-add-edit-member',
   standalone: true,
-  imports: [SharedModule, AutoComplete, DatePicker, NgClass, ToggleSwitch],
+  imports: [SharedModule, AutoComplete, DatePicker, ToggleSwitch, NgClass],
   template: `
     <div>
       <div class="mb-4">
         <hr class="h-px bg-gray-200 border-0"/>
       </div>
+      <div class="flex flex-wrap flex-col justify-center">
+        <form [formGroup]="memberForm" (ngSubmit)="onSubmit()">
 
-      <form [formGroup]="memberForm" (ngSubmit)="onSubmit()">
-        <input type="hidden" name="focus"/>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
-          <div>
-            <label>ยศ</label>
-            <p-autoComplete
-              id="rank"
-              formControlName="rank"
-              [dropdown]="true"
-              [suggestions]="filteredRanks"
-              (completeMethod)="filterRanks($event)"
-              appendTo="body"
-              class="w-full"
-              optionLabel="rank"
-            >
-            </p-autoComplete>
+          <div class="grid sm:grid-cols-1  md:grid-cols-2 gap-2 md:gap-4">
+            <input type="hidden" name="focus"/>
+            <div class="flex-1">
+              <label>ยศ</label>
+              <p-autoComplete
+                id="rank"
+                formControlName="rank"
+                [dropdown]="true"
+                [suggestions]="filteredRanks"
+                (completeMethod)="filterRanks($event)"
+                appendTo="body"
+                optionLabel="rank" styleClass="w-full"
+              >
+              </p-autoComplete>
+            </div>
+            <div>
+              <label for="firstname">ชื่อ</label>
+              <input
+                type="text"
+                pInputText
+                formControlName="firstname" class="w-full"
+              />
+            </div>
+            <div>
+              <label for="lastname">นามสกุล</label>
+              <input
+                type="text"
+                pInputText
+                formControlName="lastname"
+                class="w-full mt-1"
+              />
+            </div>
+            <div>
+              <label for="birthdate">วันเดือนปีเกิด</label>
+              <p-datepicker
+                formControlName="birthdate"
+                [showIcon]="true"
+                [iconDisplay]="'input'"
+                inputId="icondisplay" dateFormat="d M yy"
+                appendTo="body" styleClass="w-full mt-1"></p-datepicker>
+            </div>
+            <div class="col-span-2">
+              <label for="address">ที่อยู่</label>
+              <input
+                type="text"
+                pInputText
+                formControlName="address"
+                class="w-full mt-1"
+              />
+              <small class="text-slate-400 text-sm italic">บ้านเลขที่ ถนน ตำบล</small>
+            </div>
+            <div>
+              <label for="district">อำเภอ</label>
+              <input
+                type="text"
+                pInputText
+                formControlName="district"
+                class="w-full mt-1"
+              />
+            </div>
+            <div>
+              <label for="province">จังหวัด</label>
+              <input
+                type="text"
+                pInputText
+                formControlName="province"
+                class="w-full mt-1"
+              />
+            </div>
+            <div>
+              <label for="zip">รหัสไปรษณีย์</label>
+              <input
+                type="text"
+                pInputText
+                formControlName="zip"
+                class="w-full mt-1"
+              />
+            </div>
+            <div>
+              <label for="phone">โทรศัพท์</label>
+              <input
+                type="text"
+                pInputText
+                formControlName="phone"
+                class="w-full mt-1"
+              />
+            </div>
           </div>
-          <div>
-            <label for="firstname">ชื่อ</label>
-            <input
-              type="text"
-              pInputText
-              formControlName="firstname"
-              class="w-full"
-            />
-          </div>
-          <div>
-            <label for="lastname">นามสกุล</label>
-            <input
-              type="text"
-              pInputText
-              formControlName="lastname"
-              class="w-full mt-1"
-            />
-          </div>
-          <div>
-            <label for="birthdate">วันเดือนปีเกิด</label>
-            <p-datepicker
-              formControlName="birthdate"
-              [showIcon]="true"
-              [iconDisplay]="'input'"
-              inputId="icondisplay"
-              appendTo="body" styleClass="mt-1"></p-datepicker>
-          </div>
-          <div class="col-span-2">
-            <label for="address">ที่อยู่</label>
-            <input
-              type="text"
-              pInputText
-              formControlName="address"
-              class="w-full mt-1"
-            />
-            <small class="text-slate-400 text-sm italic">บ้านเลขที่ ถนน ตำบล</small>
-          </div>
-          <div>
-            <label for="district">อำเภอ</label>
-            <input
-              type="text"
-              pInputText
-              formControlName="district"
-              class="w-full mt-1"
-            />
-          </div>
-          <div>
-            <label for="province">จังหวัด</label>
-            <input
-              type="text"
-              pInputText
-              formControlName="province"
-              class="w-full mt-1"
-            />
-          </div>
-          <div>
-            <label for="zip">รหัสไปรษณีย์</label>
-            <input
-              type="text"
-              pInputText
-              formControlName="zip"
-              class="w-full mt-1"
-            />
-          </div>
-          <div>
-            <label for="phone">โทรศัพท์</label>
-            <input
-              type="text"
-              pInputText
-              formControlName="phone"
-              class="w-full mt-1"
-            />
-          </div>
-        </div>
-        <div class="flex mt-2">
-          <p-toggleswitch formControlName="alive"/>
-          <span
-            [ngClass]="{
+          <div class="flex mt-2">
+            <p-toggleswitch formControlName="alive"/>
+            <span
+              [ngClass]="{
               isAlive: statusMessage == 'ยังมีชีวิต',
               status: statusMessage == 'เสียชีวิตแล้ว',
             }"
-          >{{ statusMessage }}</span
-          >
-        </div>
-        <div class="my-3">
-          <hr class="h-px bg-gray-400 border-0"/>
-        </div>
-        <div class="grid grid-cols-2 mt-3 gap-2 md:gap-4">
-          <p-button
-            label="Cancel"
-            severity="secondary"
-            styleClass="w-full"
-            class="w-full mr-2"
-            (onClick)="closeDialog()"
-          />
-          <p-button
-            label="Save"
-            (onClick)="onSubmit()"
-            [disabled]="memberForm.invalid"
-            styleClass="w-full"
-            class="w-full"
-          />
-        </div>
-      </form>
+            >{{ statusMessage }}</span
+            >
+          </div>
+          <div class="my-3">
+            <hr class="h-px bg-gray-400 border-0"/>
+          </div>
+          <div class="grid grid-cols-2 mt-3 gap-2 md:gap-4">
+            <p-button
+              label="Cancel"
+              severity="secondary"
+              styleClass="w-full"
+              class="w-full mr-2"
+              (onClick)="closeDialog()"
+            />
+            <p-button
+              label="Save"
+              (onClick)="onSubmit()"
+              [disabled]="memberForm.invalid"
+              styleClass="w-full"
+              class="w-full"
+            />
+          </div>
+        </form>
+      </div>
     </div>
   `,
   styles: `
@@ -178,11 +178,11 @@ export class AddEditMemberComponent implements OnInit {
   member!: Member;
   memberForm!: FormGroup;
   ranks: any[] = [
-    { rank: 'น.อ.ร.' },
-    { rank: 'ร.ต.อ.' },
-    { rank: 'พ.ต.ต.' },
-    { rank: 'พ.ต.ท.' },
-    { rank: 'พ.ต.อ.' },
+    {rank: 'น.อ.ร.'},
+    {rank: 'ร.ต.อ.'},
+    {rank: 'พ.ต.ต.'},
+    {rank: 'พ.ต.ท.'},
+    {rank: 'พ.ต.อ.'},
   ];
   filteredRanks: any;
   statusMessage: string = 'ยังมีชีวิต';

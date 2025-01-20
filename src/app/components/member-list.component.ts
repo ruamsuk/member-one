@@ -14,10 +14,11 @@ import { NgClass } from '@angular/common';
 import { ThaiDatePipe } from '../pipes/thai-date.pipe';
 import { MemberDetailComponent } from './member-detail.component';
 import { ConfirmationService } from 'primeng/api';
+import { Message } from 'primeng/message';
 
 @Component({
   selector: 'app-member-list',
-  imports: [SharedModule, TableModule, NgClass, ThaiDatePipe],
+  imports: [SharedModule, TableModule, NgClass, ThaiDatePipe, Message],
   template: `
     @if (loading()) {
       <div class="loading-shade">
@@ -33,7 +34,7 @@ import { ConfirmationService } from 'primeng/api';
           [globalFilterFields]="['firstname','lastname','province','alive']"
           [rows]="10"
           [rowHover]="true"
-          [tableStyle]="{ 'min-width': '30rem'}"
+          [tableStyle]="{ 'min-width': '40rem'}"
           responsiveLayout="scroll">
           >
           <ng-template #caption>
@@ -132,8 +133,10 @@ import { ConfirmationService } from 'primeng/api';
           <ng-template #footer>
             <td colspan="5">
               @if (!admin && !isMember) {
-                <div class="text-center text-lg text-red-500 italic bg-gray-800 my-3">
-                  Visitors are not allowed to view member details.
+                <div>
+                  <p-message severity="warn" icon="pi pi-exclamation-circle" styleClass="center italic">
+                    Visitors are not allowed to view member details.
+                  </p-message>
                 </div>
               }
             </td>
@@ -202,7 +205,7 @@ export class MemberListComponent implements OnDestroy {
       header: 'Member details',
       modal: true,
       width: '420px',
-      contentStyle: { overflow: 'auto' },
+      contentStyle: {overflow: 'auto'},
       breakpoints: {
         '960px': '420px',
         '640px': '420px',
@@ -220,7 +223,7 @@ export class MemberListComponent implements OnDestroy {
       header: header,
       width: '500px',
       modal: true,
-      contentStyle: { overflow: 'auto' },
+      contentStyle: {overflow: 'auto'},
       breakpoints: {
         '960px': '500px',
         '640px': '360px',

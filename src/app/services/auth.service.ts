@@ -12,8 +12,8 @@ import {
   updateProfile,
   user,
   User,
-  UserCredential,
   UserInfo,
+  UserCredential,
   IdTokenResult,
 } from '@angular/fire/auth';
 import { GoogleAuthProvider, FacebookAuthProvider } from '@firebase/auth';
@@ -52,7 +52,7 @@ export class AuthService {
 
   get userProfile$(): Observable<User | null> {
     const user = this.firebaseAuth.currentUser;
-    const ref = doc(this.firestore, 'users', `${ user?.uid }`);
+    const ref = doc(this.firestore, 'users', `${user?.uid}`);
     if (ref) {
       return docData(ref) as Observable<User | null>;
     } else {
@@ -85,6 +85,18 @@ export class AuthService {
     return from(signInWithEmailAndPassword(this.firebaseAuth, email, password));
   }
 
+  // async login(email: string, password: string): Promise<void> {
+  //   try {
+  //     const userCredential = await this.ngZone.run(() => signInWithEmailAndPassword(this.firebaseAuth, email, password));
+  //     const user = userCredential.user;
+  //     await this.saveUserToFirestore(user, user.displayName || '');
+  //     await this.saveToLocal(user);
+  //   } catch (error) {
+  //     console.error('Error during login:', error);
+  //     throw error;
+  //   }
+  // }
+
   async getUserProfile(uid: string) {
     const userDocRef = doc(this.firestore, 'users', uid);
     const userDocSnapshot = await getDoc(userDocRef);
@@ -102,21 +114,21 @@ export class AuthService {
 
   async googleSignIn(): Promise<void> {
     const provider = new GoogleAuthProvider();
-    const { user } = await this.ngZone.run(() => signInWithPopup(this.firebaseAuth, provider));
+    const {user} = await this.ngZone.run(() => signInWithPopup(this.firebaseAuth, provider));
     await this.saveUserToFirestore(user, '');
     await this.saveToLocal(user);
   }
 
-  async facebookSignIn(): Promise<void> {
-    const provider = new FacebookAuthProvider();
-    const { user } = await this.ngZone.run(() => signInWithPopup(this.firebaseAuth, provider));
-    await this.saveUserToFirestore(user, '');
-    await this.saveToLocal(user);
-  }
+  // async facebookSignIn(): Promise<void> {
+  //   const provider = new FacebookAuthProvider();
+  //   const { user } = await this.ngZone.run(() => signInWithPopup(this.firebaseAuth, provider));
+  //   await this.saveUserToFirestore(user, '');
+  //   await this.saveToLocal(user);
+  // }
 
   async signupWithDisplayName(email: string, password: string, displayName: string): Promise<void> {
     const userCredential = await this.ngZone.run(() => createUserWithEmailAndPassword(this.firebaseAuth, email, password));
-    await updateProfile(userCredential.user, { displayName });
+    await updateProfile(userCredential.user, {displayName});
     await this.saveUserToFirestore(userCredential.user, displayName);
     await this.sendEmailVerification();
     await this.logout();
@@ -165,19 +177,19 @@ export class AuthService {
     }
   }
 
-  async updateUserProfile(user: UserInfo): Promise<void> {
-    const currentUser = this.firebaseAuth.currentUser;
-
-    if (currentUser) {
-      if (typeof user.email === 'string') {
-        await this.ngZone.run(() => updateEmail(currentUser, <string>user.email));
-      }
-      await this.ngZone.run(() => updateProfile(currentUser, {
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-      }));
-    }
-  }
+  // async updateUserProfile(user: UserInfo): Promise<void> {
+  //   const currentUser = this.firebaseAuth.currentUser;
+  //
+  //   if (currentUser) {
+  //     if (typeof user.email === 'string') {
+  //       await this.ngZone.run(() => updateEmail(currentUser, <string>user.email));
+  //     }
+  //     await this.ngZone.run(() => updateProfile(currentUser, {
+  //       displayName: user.displayName,
+  //       photoURL: user.photoURL,
+  //     }));
+  //   }
+  // }
 
   /** Get From Firestore */
   async getUserRole(uid: string): Promise<string | null> {
@@ -214,7 +226,6 @@ export class AuthService {
     const idTokenResult = await this.firebaseAuth.currentUser?.getIdTokenResult();
     return idTokenResult?.claims['role'];
   }
-
 
   getIdTokenResult(): Promise<IdTokenResult> | any {
     return this.firebaseAuth.currentUser?.getIdTokenResult();
@@ -259,11 +270,13 @@ export class AuthService {
             role: userRole,
           };
 
-          const ref = doc(this.firestore, 'users', `${ user.uid }`);
+          const ref = doc(this.firestore, 'users', `${user.uid}`);
           return setDoc(ref, fakeData);
         })
         .catch(error => {
-          console.error('Error updating user profile:', error);
+          if (error instanceof Error) {
+            console.error('Error updating user profile:', error.message);
+          }
           throw error;
         });
     } else {
