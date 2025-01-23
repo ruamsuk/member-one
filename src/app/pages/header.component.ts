@@ -12,7 +12,6 @@ import { NgOptimizedImage } from '@angular/common';
   imports: [SharedModule, RouterLink, NgOptimizedImage],
   template: `
     @if (currentUser()) {
-
       <div class="card">
         <p-menubar [model]="items">
           <ng-template pTemplate="start">

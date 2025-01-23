@@ -134,7 +134,7 @@ import { Message } from 'primeng/message';
             <td colspan="5">
               @if (!admin && !isMember) {
                 <div>
-                  <p-message severity="warn" icon="pi pi-exclamation-circle" styleClass="center italic">
+                  <p-message severity="warn" icon="pi pi-exclamation-circle" styleClass="center-v italic">
                     Visitors are not allowed to view member details.
                   </p-message>
                 </div>
@@ -148,12 +148,11 @@ import { Message } from 'primeng/message';
   `,
   styles: `
     .isAlive {
-      color: #53c7f1 !important;
-      font-weight: 500 !important;
+      @apply text-teal-500 font-medium;
     }
 
     .row-status {
-      background-color: rgba(246, 246, 248, 0.05) !important;
+      @apply bg-opacity-5 dark:bg-slate-900;
     }
 
     td > i {

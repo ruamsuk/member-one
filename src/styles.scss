@@ -18,13 +18,23 @@
 
 @font-face {
   font-family: 'Leelawadee UI';
-  src: url('./assets/fonts/LeelaUIb.ttf') format('truetype');
+  src: url('./assets/fonts/LeelUIsl.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 html {
   font-family: Sarabun, "Leelawadee UI", sans-serif;
+}
+
+body {
+  background-color: #e5e7eb;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #1a1a1a; // Dark background color
+  }
 }
 
 /** @apply */
@@ -36,6 +46,15 @@ html {
   .center {
     @apply flex justify-center items-center;
   }
+
+  .center-v {
+    @apply md:flex justify-center items-center;
+  }
+}
+
+/* Custom font */
+.lee-la {
+  font-family: "Leelawadee UI", sans-serif !important;
 }
 
 .anuphon {
@@ -80,7 +99,7 @@ html {
 }
 
 th {
-  @apply text-teal-400 text-sm md:text-lg  bg-gray-800 bg-opacity-25
+  @apply text-teal-400 text-sm md:text-lg   bg-opacity-25
 }
 
 .icons {

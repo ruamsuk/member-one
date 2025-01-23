@@ -45,7 +45,7 @@ import { Router } from '@angular/router';
       <div
         class="center text-slate-300 my-3"
       >
-        <p class="hidden md:block text-base md:text-xl text-amber-400">Welcome to.</p>
+        <p class="hidden md:block text-base md:text-xl text-red-500 dark:text-amber-400">Welcome to.</p>
       </div>
 
 
@@ -79,7 +79,8 @@ import { Router } from '@angular/router';
         </p-galleria>
       </div>
       <div class="center my-3">
-        <p class="hidden md:block text-base md:text-xl text-amber-400">25th Batch of Student Investigators' Training
+        <p class="hidden md:block text-base md:text-xl text-red-500 dark:text-amber-400">25th Batch of Student
+          Investigators' Training
           Club
         </p>
       </div>
